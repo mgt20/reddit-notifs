@@ -3,6 +3,9 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import secrets
+import logging
+
+logging.basicConfig(filename='log.log', filemode='w', level=logging.DEBUG)
 
 SUBREDDIT_TO_EXPLORE = '$nameofsubreddit'
 NUM_POSTS_TO_EXPLORE = 15
