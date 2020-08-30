@@ -1,6 +1,6 @@
 # Reddit Notifs
 
-Look for posts matching some keywords and email notifications to yourself.
+Look for posts matching some keywords and email notifications to yourself. Run on a schedule within a Docker container. Forked from kelseyywang/reddit-notifs
 
 ## Secrets.py
 
