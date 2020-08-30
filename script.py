@@ -4,16 +4,16 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import secrets
 
-SUBREDDIT_TO_EXPLORE = 'askreddit'
-NUM_POSTS_TO_EXPLORE = 10
+SUBREDDIT_TO_EXPLORE = '$nameofsubreddit'
+NUM_POSTS_TO_EXPLORE = 15
 SCORE_WEIGHT = 3
 COMMENT_WEIGHT = 1
 # The following is the minimum relevant weighted score to be a match, 
 # where weighted score = SCORE_WEIGHT * score + COMMENT_WEIGHT * num comments
-MIN_RELEVANT_WEIGHTED_SCORE = 20
+MIN_RELEVANT_WEIGHTED_SCORE = 0
 # The following tuple contains 1. list of required terms/stems, 2. list of secondary terms, 
 # 3. min number of secondary terms needed to be a match
-KEYWORDS_GROUP = (['conspiracy'], ['true', 'crazy', 'real'], 1)
+KEYWORDS_GROUP = (['$priterm1'], ['$secterm2', '$secterm3', '$secterm4'], 1)
 
 # Returns a count of secondary terms if is relevant, -1 otherwise
 def get_keyword_count(str):
@@ -44,7 +44,7 @@ def get_reddit_posts():
     # Explore rising posts in subreddit and store info if is relevant and popular enough
     # Tip: You could also explore top posts, new posts, etc.
     # See https://praw.readthedocs.io/en/latest/getting_started/quick_start.html#obtain-submission-instances-from-a-subreddit
-    for submission in subreddit.rising(limit=NUM_POSTS_TO_EXPLORE):
+    for submission in subreddit.new(limit=NUM_POSTS_TO_EXPLORE):
         keyword_count = get_keyword_count(submission.title.lower())
         weighted_score = SCORE_WEIGHT * submission.score + COMMENT_WEIGHT * len(list(submission.comments))
         if keyword_count != -1 and weighted_score > MIN_RELEVANT_WEIGHTED_SCORE:
@@ -55,9 +55,7 @@ def get_reddit_posts():
             matching_posts_info.append((keyword_count, weighted_score, post_dict))
     # Sort asc by the keyword count, then desc by weighted score (can't sort by post_dict)
     matching_posts_info.sort(key=lambda x: (x[0], -1 * x[1]))
-    return matching_posts_info
-
-# Send email of matching posts
+    return matching_posts_info# Send email of matching posts
 def send_email():
     matching_posts_info = get_reddit_posts()
     reddit_email_content = ''
@@ -70,7 +68,7 @@ def send_email():
             secrets.RECEIVER_EMAIL
             # Add any other email addresses to send to
         ]
-        subject = 'Hey you! I have something SPECIAL for you to check out...'
+        subject = 'There is something on /r' + SUBREDDIT_TO_EXPLORE + ' for you'
         # Port 587 is used when sending emails from an app with TLS required
         # See https://support.google.com/a/answer/176600?hl=en
         server = smtplib.SMTP('smtp.gmail.com:587')
