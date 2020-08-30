@@ -30,4 +30,4 @@ To Setup Docker Container and run the script on a schedule:
 3. Run "docker-compose up -d" to run the docker image in detached mode
 
 NOTE:
-- The cron schedule by default runs the script “At minute 5 past every hour from 58 through 21”. Modify this in the Dockerfile to adjust the schedule
+- The cron schedule by default runs the script “At minute 5 past every hour from 5 through 21”. Modify this in the Dockerfile to adjust the schedule
